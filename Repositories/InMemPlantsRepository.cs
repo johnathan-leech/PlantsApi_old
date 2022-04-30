@@ -18,12 +18,14 @@ namespace PlantCatalog.Repositories
             return plants;
         }
 
-        public Plant GetPlant(Guid id) => plants.Where(plant => plant.Id == id).SingleOrDefault();
+        public Plant GetPlant(Guid id)
+        {
+            return plants.Where(plant => plant.Id == id).SingleOrDefault();
+        }
 
-
-
-
-
-
+        public void Create(Plant plant)
+        {
+            plants.Add(plant);
+        }
     }
 }

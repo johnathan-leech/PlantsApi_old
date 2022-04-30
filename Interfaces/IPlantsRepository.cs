@@ -6,6 +6,7 @@ namespace PlantCatalog.Interfaces
     {
         Plant GetPlant(Guid id);
         IEnumerable<Plant> GetPlants();
+        void Create(Plant plant);
     }
 
 }
