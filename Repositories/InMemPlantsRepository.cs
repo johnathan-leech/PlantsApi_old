@@ -27,5 +27,17 @@ namespace PlantCatalog.Repositories
         {
             plants.Add(plant);
         }
+
+        public void Update(Plant plant)
+        {
+            int index = plants.FindIndex(existing => existing.Id == plant.Id);
+            plants[index] = plant;
+        }
+
+        public void Delete(Guid id)
+        {
+            int index = plants.FindIndex(existing => existing.Id == id);
+            plants.RemoveAt(index);
+        }
     }
 }
