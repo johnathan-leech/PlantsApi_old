@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Driver;
 using PlantCatalog.Interfaces;
 using PlantCatalog.Models;
@@ -9,6 +10,7 @@ namespace PlantCatalog.Repositories
         const string databaseName = "plantCatalog";
         const string collectionName = "plants";
         readonly IMongoCollection<Plant> plantsCollection;
+        readonly FilterDefinitionBuilder<Plant> filterBuilder = Builders<Plant>.Filter;
 
         public MongoDbPlantsRepository(IMongoClient client)
         {
@@ -23,22 +25,25 @@ namespace PlantCatalog.Repositories
 
         public void Delete(Guid id)
         {
-            throw new NotImplementedException();
+            var filter = filterBuilder.Eq(plant => plant.Id, id);
+            plantsCollection.DeleteOne(filter);
         }
 
         public Plant GetPlant(Guid id)
         {
-            throw new NotImplementedException();
+            var filter = filterBuilder.Eq(plant => plant.Id, id);
+            return plantsCollection.Find(filter).SingleOrDefault();
         }
 
         public IEnumerable<Plant> GetPlants()
         {
-            throw new NotImplementedException();
+            return plantsCollection.Find(new BsonDocument()).ToList();
         }
 
         public void Update(Plant plant)
         {
-            throw new NotImplementedException();
+            var filter = filterBuilder.Eq(existing => existing.Id, plant.Id);
+            plantsCollection.ReplaceOne(filter, plant);
         }
     }
 

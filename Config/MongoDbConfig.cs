@@ -7,6 +7,6 @@ namespace PlantCatalog.Config
         public string ConnectionString 
         { 
             get { return $"mongodb://{Host}:{Port}"; }
-        }}
+        }
     }
 }
