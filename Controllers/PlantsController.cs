@@ -17,22 +17,22 @@ namespace PlantCatalog.Controllers
 
         // GET /Plants
         [HttpGet]
-        public IEnumerable<PlantDto> GetPlants(){
-            var plants = repository.GetPlants().Select(plant => plant.AsDto());
+        public async Task<IEnumerable<PlantDto>> GetPlantsAsync(){
+            var plants = (await repository.GetPlantsAsync()).Select(plant => plant.AsDto());
             return plants;
         }
 
         // GET /Plants/id
         [HttpGet("{id}")]
-        public ActionResult<PlantDto> GetPlant(Guid id){
-            var plant = repository.GetPlant(id);
+        public async Task<ActionResult<PlantDto>> GetPlantAsync(Guid id){
+            var plant = await repository.GetPlantAsync(id);
             if (plant is null) { return NotFound(); }
             return plant.AsDto();
         }
 
         // POST /Plants
         [HttpPost]
-        public ActionResult<PlantDto> Create(CreatePlantDto dto)
+        public async Task<ActionResult<PlantDto>> CreateAsync(CreatePlantDto dto)
         {
             Plant plant = new() { 
                 Id           = Guid.NewGuid(), 
@@ -41,15 +41,15 @@ namespace PlantCatalog.Controllers
                 MaxZone      = dto.MaxZone, 
                 CreationDate = DateTimeOffset.UtcNow 
             };
-            repository.Create(plant);
-            return CreatedAtAction(nameof(GetPlant), new { id = plant.Id }, plant.AsDto()); // gets the plant information that was just created.
+            await repository.CreateAsync(plant);
+            return CreatedAtAction(nameof(GetPlantAsync), new { id = plant.Id }, plant.AsDto()); // gets the plant information that was just created.
         }
 
         // PUT /Plants/{id}
         [HttpPut("{id}")]
-        public ActionResult Update(Guid id, UpdatePlantDto dto)
+        public async Task<ActionResult> UpdateAsync(Guid id, UpdatePlantDto dto)
         {
-            var existing = repository.GetPlant(id);
+            var existing = await repository.GetPlantAsync(id);
             if (existing is null) { return NotFound(); }
             
             Plant updated = existing with 
@@ -58,17 +58,17 @@ namespace PlantCatalog.Controllers
                 MinZone = dto.MinZone ,
                 MaxZone = dto.MaxZone
             };
-            repository.Update(updated);
+            await repository.UpdateAsync(updated);
             return NoContent();
         }
 
         // DELETE /Plants/{id}
         [HttpDelete("{id}")]
-        public ActionResult Delete(Guid id)
+        public async Task<ActionResult> DeleteAsync(Guid id)
         {
-            var existing = repository.GetPlant(id);
+            var existing = await repository.GetPlantAsync(id);
             if (existing is null) { return NotFound(); }
-            repository.Delete(id);
+            await repository.DeleteAsync(id);
             return NoContent();
         }
     }

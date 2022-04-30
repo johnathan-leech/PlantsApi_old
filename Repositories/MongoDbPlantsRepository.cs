@@ -18,35 +18,32 @@ namespace PlantCatalog.Repositories
             plantsCollection = database.GetCollection<Plant>(collectionName);
         }
 
-        public void Create(Plant plant)
+        public async Task CreateAsync(Plant plant)
         {
-            plantsCollection.InsertOne(plant);
+            await plantsCollection.InsertOneAsync(plant);
         }
 
-        public void Delete(Guid id)
-        {
-            var filter = filterBuilder.Eq(plant => plant.Id, id);
-            plantsCollection.DeleteOne(filter);
-        }
-
-        public Plant GetPlant(Guid id)
+        public async Task DeleteAsync(Guid id)
         {
             var filter = filterBuilder.Eq(plant => plant.Id, id);
-            return plantsCollection.Find(filter).SingleOrDefault();
+            await plantsCollection.DeleteOneAsync(filter);
         }
 
-        public IEnumerable<Plant> GetPlants()
+        public async Task<Plant> GetPlantAsync(Guid id)
         {
-            return plantsCollection.Find(new BsonDocument()).ToList();
+            var filter = filterBuilder.Eq(plant => plant.Id, id);
+            return await plantsCollection.Find(filter).SingleOrDefaultAsync();
         }
 
-        public void Update(Plant plant)
+        public async Task<IEnumerable<Plant>> GetPlantsAsync()
+        {
+            return await plantsCollection.Find(new BsonDocument()).ToListAsync();
+        }
+
+        public async Task UpdateAsync(Plant plant)
         {
             var filter = filterBuilder.Eq(existing => existing.Id, plant.Id);
-            plantsCollection.ReplaceOne(filter, plant);
+            await plantsCollection.ReplaceOneAsync(filter, plant);
         }
     }
-
-
-
 }

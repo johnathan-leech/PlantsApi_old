@@ -4,11 +4,10 @@ namespace PlantCatalog.Interfaces
 {
     public interface IPlantsRepository
     {
-        Plant GetPlant(Guid id);
-        IEnumerable<Plant> GetPlants();
-        void Create(Plant plant);
-        void Update(Plant plant);
-        void Delete(Guid id);
+        Task<Plant> GetPlantAsync(Guid id);
+        Task<IEnumerable<Plant>> GetPlantsAsync();
+        Task CreateAsync(Plant plant);
+        Task UpdateAsync(Plant plant);
+        Task DeleteAsync(Guid id);
     }
-
 }
